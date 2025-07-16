@@ -8,7 +8,7 @@ import NavItem from '../components/NavItem.vue';
 import Donate  from "../components/QuickAction/Donate.vue";
 import FindDonar from "../components/QuickAction/FindDonar.vue";
 import RequestBlood from "../components/QuickAction/RequestBlood.vue";
-
+import Search from "../components/NavItemComponents/Search.vue";
 
 const routes=[
     { path:'/',component:login,name:'login' },
@@ -19,7 +19,8 @@ const routes=[
        { path:'/NavItem',component:NavItem ,name:'NavItem' },
        {path:'/Donate',component:Donate ,name:'Donate'},
        {path:'/FindDonar',component:FindDonar ,name:'FindDonar'},
-       {path:'/RequestBlood',component:RequestBlood ,name:'RequestBlood'}
+       {path:'/RequestBlood',component:RequestBlood ,name:'RequestBlood'},
+       {path:'/Search',component:Search ,name:'Search'}
 ]
 const router=createRouter({
     history:createWebHistory(),

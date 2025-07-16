@@ -4,7 +4,7 @@
             <router-link to="/Home"  class="nav-item" active-class="active">
                 <div class="nav-item" :active-class="active">🏠<br />Home</div>
             </router-link>
-            <router-link  class="nav-item" active-class="active" to="/search">
+            <router-link  class="nav-item" active-class="active" to="/Search">
                 <div>🔍<br />Search</div>
             </router-link>
             <router-link  class="nav-item" active-class="active" to="/notifications">
