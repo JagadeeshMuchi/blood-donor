@@ -1,0 +1,23 @@
+﻿
+
+@{
+    ViewData["Title"] = "SignIn Page";
+}
+@{
+    string[] users = ViewBag.UserData as string[];
+}
+
+<h2>FindHer Song:</h2>
+<ul>
+    @foreach (var user in users)
+    {
+        if (!string.IsNullOrEmpty(user))
+        {
+            <li>@user</li>
+        }
+       
+    }
+</ul>
+@*<div class="text-center">
+    <h1 class="display-4">Welcome to SignIn Page</h1>
+</div>*@
