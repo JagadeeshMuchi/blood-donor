@@ -18,7 +18,7 @@
     <section class="donation-card">
       <router-link to="/FindDonar"><div class="action-card" v-tooltip="FindDonar">🔍<br />Find Donors</div></router-link>
       <router-link to="/Donate"><div class="action-card" v-tooltip="Donate">💉<br />Donate</div></router-link>
-      <router-link to="/RequestBlood"><div class="action-card">📦<br />Order Blood</div></router-link>
+      <router-link to="/OrderBlood"><div class="action-card">📦<br />Order Blood</div></router-link>
     </section>
 
     
@@ -64,7 +64,7 @@ import NavItem from './NavItem.vue';
   font-family: sans-serif;
   background: #f2f2f2;
   padding-bottom: 80px;
-  /* max-width: 580px; */
+  max-width:700px; 
   margin: 0 auto;
 }
 /* .container1 {
@@ -79,12 +79,13 @@ import NavItem from './NavItem.vue';
 .header {
   background-color: #e53935;
   color: white;
-  padding: 16px;
-  font-size: 24px;
+  padding: 5px;
+  font-size: 10px;
   font-weight: bold;
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
   text-align: center;
+   height: 60px;
 }
 
 .donor-card {
@@ -125,7 +126,7 @@ import NavItem from './NavItem.vue';
 .action-card {
     display: flex;
     justify-content: center;
-  width: 20rem;
+  width: 12rem;
   height: 4rem;
   margin: 05.rem;
   background: white;

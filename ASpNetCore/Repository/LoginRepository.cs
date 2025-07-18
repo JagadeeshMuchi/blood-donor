@@ -29,10 +29,13 @@ namespace ASpNetCore.Repository
                 //con.Open();
                
                 SqlCommand cmd=new SqlCommand(sql,con);
-                SqlDataReader dataReader  = cmd.ExecuteReader();
-                if(dataReader.HasRows)
+                SqlDataReader dr = cmd.ExecuteReader();
+                if (dr.HasRows)
                 {
-                    logId = Convert.ToInt16(dataReader[0]);
+                    while (dr.Read())
+                    {
+                        logId = Convert.ToInt16(dr[0]);
+                    }
                 }
                 con.Close();
             }

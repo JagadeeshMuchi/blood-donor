@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container1">
         <nav class="bottom-nav">
             <router-link to="/Home"  class="nav-item" active-class="active">
                 <div class="nav-item" :active-class="active">🏠<br />Home</div>
@@ -22,7 +22,7 @@ import { useRouter, RouterLink } from 'vue-router';
 const router = useRouter();
 </script>
 <style scoped>
-.container {
+.container1 {
   font-family: sans-serif;
   background: #f2f2f2;
   padding-bottom: 10px;

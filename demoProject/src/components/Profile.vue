@@ -59,7 +59,7 @@ import NavItem from './NavItem.vue';
 // });
 
 const router = useRouter();
-// const username = router.query.username
+ //const username = router.query.username
 // const password = router.query.password
 //const iProfId=router.query.iProfileId;
 const profileView=ref({});
@@ -69,6 +69,7 @@ const isShowSidebar = ref(false);
 onMounted(() => {
     // You can fetch user data here if needed
    iEmpId.value= localStorage.getItem('ProfileId');
+   //iEmpId.value = iProfId.value;
      apiServer.getUserProfile(iEmpId.value).then((res) => { 
         profileView.value = res.data;
         
@@ -90,7 +91,7 @@ const openSideBar = () => {
 .container1 {
   /* display: auto;
   justify-content: center; */
-  /* max-width: fit-content; */
+  max-width: 700px;
   margin: 0 auto;
   font-family: Arial, sans-serif;
   background-color: #fff;

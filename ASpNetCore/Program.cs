@@ -6,7 +6,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowVueApp",
         builder => builder
-            .WithOrigins("http://127.0.0.1:5173") // Vue dev server
+           .WithOrigins("http://127.0.0.1:5173", "http://localhost:5173") // Vue dev server
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials()

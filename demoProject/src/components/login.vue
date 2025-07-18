@@ -41,11 +41,11 @@ const login=function(){
       //alert(res.data.count)
         if(res.data.count>0){
           localStorage.setItem('ProfileId',res.data.id);
-          router.push('/Home');
+           router.push('/Home');
           // router.push({
-          //   name: 'Profile',
+          //   name: '/Home',
           //   query: {
-          //     username: this.username,
+          //     //username: this.username,
           //     iProfileId: res.data.id
           //   }
           // })
