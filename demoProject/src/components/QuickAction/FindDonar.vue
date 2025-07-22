@@ -64,7 +64,8 @@
 
         <p class="disclaimer">
             <strong>Disclaimer:</strong> Any raised Blood request is live till 7 days. Your Blood request is live till
-            25-jul 2025
+            {{disclaimerMessage}}.
+
         </p>
         <nav-item></nav-item>
     </div>
@@ -94,6 +95,10 @@ const iBloodGroupError=ref('');
 const iLocationError=ref('');
 const sDescriptionError=ref('');
 const iUnitsError=ref('');
+const disclaimerMessage=ref('');
+
+disclaimerMessage.value = new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString();
+
 
 
 const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
@@ -101,14 +106,16 @@ const units = [1, 2, 3, 4, 5, 6, 8]
 
 
 onMounted(()=>{
-    findDonorService.getFindDonorView().then((response)=> {
-        findDonorView.value = response.data;
-
-    }).catch((error) => {
-        console.error("Error fetching find donor view:", error);
-        alert("An error occurred while fetching find donor view.");
-    });
+  getLoad();
 })
+const getLoad = () => {
+    findDonorService.getFindDonorView().then((response) => {
+        findDonorView.value = response.data;
+    }).catch((error) => {
+        console.error('Error fetching find donor view:', error);
+        alert('An error occurred while fetching find donor view.');
+    });
+};
 const selectGroup = (group) => {
    selectedGroup.value = group;
    findDonorView.value.iBloodGroup= group;
@@ -130,10 +137,12 @@ function PostFindDonor() {
         router.push('/Home');
      } else {
         alert("Failed to post your request. Please try again.");
+        getLoad();
      }
     }).catch((error) => {
         console.error("Error posting find donor request:", error);
         alert("An error occurred while posting your request. Please try again.");
+        getLoad();
        // router.push('/Home')
     });
   

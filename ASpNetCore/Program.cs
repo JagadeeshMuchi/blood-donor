@@ -13,6 +13,10 @@ builder.Services.AddCors(options =>
             );
 });
 builder.Services.AddApplicationInsightsTelemetry();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+});
 
 var app = builder.Build();
 app.UseCors("AllowVueApp");
@@ -28,6 +32,8 @@ app.UseRouting();
 
 app.UseAuthorization();
 app.MapControllers();
+
+
 
 //app.MapControllerRoute(
 //    name: "default",

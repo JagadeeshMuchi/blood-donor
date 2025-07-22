@@ -8,14 +8,14 @@ namespace ASpNetCore.Models
 {
     public class QuickActionModel
     {
-
+        
     }
     [Serializable]
     public class FindDonarView
     {
         public FindDonarView() { }
         public int iDonarId { get; set; }
-        public string sPatinetName { get; set; }
+        public string sName { get; set; }
         public string iDonarType { get; set; }
         public string sDescription { get; set; }
         public string iBloodGroup { get; set; }
@@ -36,7 +36,7 @@ namespace ASpNetCore.Models
             SqlConnection con = new SqlConnection(connection1);
             try
             {
-                string sql = string.Format(@"insert into FindDonor values ('{0}','{1}','{2}','{3}',{4},'{5}')",findDonarView.sPatinetName,
+                string sql = string.Format(@"insert into FindDonor values ('{0}','{1}','{2}','{3}',{4},'{5}')",findDonarView.sName,
                     findDonarView.iDonarType,findDonarView.sDescription,findDonarView.iBloodGroup,findDonarView.iUnits,findDonarView.iLocation);
               
                 con.Open();
@@ -59,7 +59,7 @@ namespace ASpNetCore.Models
     {
         public OrderBloodView() { }
         public int iOrderBloodId { get; set; }
-        public string sPatientName { get; set; }
+        public string sName { get; set; }
         public string  iLocation { get; set; }
         public string iBloodGroup { get; set; }
         public int iUnits { get; set; }
@@ -79,8 +79,9 @@ namespace ASpNetCore.Models
             SqlConnection con = new SqlConnection(connection1);
             try
             {
-                string sql = string.Format(@"insert into orderBlood (spatientName,iBloodGroup,iUnits,iLocation,sDescription)values ('{}','A+',2,'Hyd','hhsad')",
-                    orderBlood.sPatientName, orderBlood.iBloodGroup, orderBlood.iUnits, orderBlood.iLocation, orderBlood.sDescription == "" ? "Not Mentioned" : orderBlood.sDescription);
+                string sql = string.Format(@"insert into orderBlood (spatientName,iBloodGroup,iUnits,iLocation,sDescription)values ('{0}','{1}',{2},'{3}','{4}')",
+                    orderBlood.sName, orderBlood.iBloodGroup, orderBlood.iUnits, orderBlood.iLocation,
+                     string.IsNullOrEmpty(orderBlood.sDescription) ? "Not Mentioned" : orderBlood.sDescription);
                 con.Open();
                 SqlCommand cmd = new SqlCommand(sql, con);
                 res = cmd.ExecuteNonQuery();
@@ -91,50 +92,6 @@ namespace ASpNetCore.Models
                 res = 0;
                 con.Close();
             }
-            return res;
-        }
-    }
-    [Serializable]
-    public class BloodDonarView
-    {
-        public BloodDonarView() { }
-        public int iDonateId { get; set; }
-        public string iDonorName { get; set; }
-
-        public int iPayFrequncy { get; set; }
-        public string iBloodGroup { get; set; }
-        public string iLocation { get; set; }
-        public string iDOB { get; set; }
-    }
-    public class BloodDonorModel
-    {
-        public BloodDonorModel()
-        {
-            bloodDonarView = new BloodDonarView();
-        }
-        public BloodDonarView bloodDonarView { get; set; }
-        string connection = string.Format(@"Server=DESKTOP-SN19IKL\\SQLEXPRESS;Database=BloodDonar;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=True;");
-
-        public int postData(BloodDonarView bloodDonar)
-        {
-            int res = 0;
-            SqlConnection sqlConnection = new SqlConnection(connection);
-
-            try
-            {
-
-                sqlConnection.Open();
-                string sql = string.Format(@"insert into DonoteBlood (sDonorName,iBloodGroup,iLocation,iFrequency,DoB)values ('usha','A+','Hyd','Quarterly',124567458)
-                     ",bloodDonar.iDonorName,bloodDonar.iBloodGroup,bloodDonar.iLocation,bloodDonar.iPayFrequncy,bloodDonar.iDOB);
-                SqlCommand cmd = new SqlCommand(sql, sqlConnection);
-                res = cmd.ExecuteNonQuery();
-
-            }catch(Exception ex)
-            {
-                res = 0;
-                sqlConnection.Close();
-            }
-            sqlConnection.Close();
             return res;
         }
     }

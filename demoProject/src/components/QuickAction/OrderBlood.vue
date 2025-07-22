@@ -9,13 +9,13 @@
     </div>
      <div class="section">
         <label class="label">👤 Name</label>
-            <input class="input" type="text" placeholder="Enter your name" v-model="orderBloodView.sName"  />
-            <div v-if="sNameError && !orderBloodView.sName" class="error">{{ sNameError }}</div>
-        </div>
+            <input class="input" type="text" placeholder="Enter your name" v-model="orderBloodView.sPatientName"  />
+            <div v-if="sNameError && !orderBloodView.sPatientName" class="error" >{{ sNameError }}</div>
+    </div>
         <div class="section">
             <label class="label">📍 Location</label>
-            <input class="input" type="text" placeholder="Enter your location" v-model="orderBloodView.sLocation"  />
-            <div v-if="sLocationError && !orderBloodView.sLocation" class="error">{{ sLocationError }}</div>
+            <input class="input" type="text" placeholder="Enter your location" v-model="orderBloodView.iLocation"  />
+            <div v-if="sLocationError && !orderBloodView.iLocation" class="error">{{ sLocationError }}</div>
 
             <strong>Disclaimer:</strong> Your location will be used to find blood banks near you.
         </div>
@@ -24,10 +24,10 @@
             <label class="label">🩸 Blood Group</label>
             <div class="grid">
                 <div v-for="group in bloodGroups" :key="group"
-                    :class="['blood-btn', selectedGroup === group ? 'active' : '']" @click="selectGroup(group)">
+                    :class="['blood-btn', selectedGroup === group ? 'active' : '']" @click="selectGroup(group)" >
                     {{ group }}
                 </div>
-                <div v-if="iBloodGroupError && !findDonorView.iBloodGroup" class="error">{{ iBloodGroupError }}</div>
+                <div v-if="sBloodGroupError && !findDonorView.iBloodGroup" class="error">{{ iBloodGroupError }}</div>
             </div>
             <strong>Note:</strong> This is the blood group of the patient. Select the appropriate group.
             <br />
@@ -57,6 +57,7 @@
         <button class="submit" @click="PostOrderBlood">Order Blood</button>
     <nav-item></nav-item>
    
+
 </div>
 </template>
 
@@ -66,16 +67,13 @@ import NavItem from '../NavItem.vue';
 import { ref } from 'vue';
 import { onMounted } from 'vue';
 import QuickActionsService from '../../Services/QuickActionsService';
+import { useRouter } from 'vue-router';
 
 onMounted(()=>{
-    QuickActionsService.getOrderBloodView().then((response) => {
-        orderBloodView.value = response.data;
-    }).catch((error) => {
-        console.error('Error fetching order blood view:', error);
-        alert('An error occurred while fetching order blood view.');
-    });
+    getLoad();
 })
 
+const router = useRouter();
 const orderBloodView = ref({});
 const sBloodGroupError = ref('');
 const sLocationError = ref('');
@@ -84,7 +82,7 @@ const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 const selectedGroup = ref('');
 const selectGroup = (group) => {
     selectedGroup.value = group;
-    orderBloodView.value.sBloodGroup = group; 
+    orderBloodView.value.iBloodGroup = group; 
 };
 const units = ['1', '2', '3', '4', '5'];
 const selectedUnit = ref('');
@@ -92,31 +90,43 @@ const selectUnit = (unit) => {
     selectedUnit.value = unit;
     orderBloodView.value.iUnits = unit; 
 };
+
+const getLoad = () => {
+    QuickActionsService.getOrderBloodView().then((response) => {
+        orderBloodView.value = response.data;
+    }).catch((error) => {
+        console.error('Error fetching order blood view:', error);
+        alert('An error occurred while fetching order blood view.');
+    });
+};
+
+
 const PostOrderBlood = () => {
-    if (!orderBloodView.value.sBloodGroup) {
+    if (!orderBloodView.value.iBloodGroup) {
         sBloodGroupError.value = 'Please enter blood group';
         return;
     }
-    if (!orderBloodView.value.sLocation) {
+    if (!orderBloodView.value.iLocation) {
         sLocationError.value = 'Please enter your location';
         return;
     }
-    if (!orderBloodView.value.sName) {
+    if (!orderBloodView.value.sPatientName) {
         sNameError.value = 'Please enter your name';
         return;
     }
 
-    apiServer.postOrderBlood(orderBloodView.value).then((res) => {
+    QuickActionsService.postOrderBlood(orderBloodView.value).then((res) => {
         if (res.data.success) {
             alert('Order placed successfully!');
-            // Reset form
-            orderBloodView.value = { sBloodGroup: '', sLocation: '', sName: '' };
+            router.push('/Home');
         } else {
             alert('Failed to place order. Please try again.');
+            getLoad(); // Reload the form data
         }
     }).catch((error) => {
         console.error('Error placing order:', error);
         alert('An error occurred while placing the order.');
+        getLoad(); // Reload the form data
     });
 };
 </script>

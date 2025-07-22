@@ -2,14 +2,10 @@
 using ASpNetCore.Models;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-using System.Text.Json;
 namespace ASpNetCore.Controllers
 {
+    
     public class QuickActionsController : Controller
-    {
-
-    }
-    public class FindDonarController : Controller
     {
         public IActionResult GetFindDonar()
         {
@@ -35,21 +31,14 @@ namespace ASpNetCore.Controllers
             response.count=model.postOrderBlood(orderBloodView);    
             return new JsonResult(response);
         }
-    }
-    public class BloodDonorController : Controller
-    {
+        public IActionResult getSearchResults(string searchKey = null)
+        {
+            var obj=new DonoteModel();
 
-        public IActionResult getBloodDonor()
-        {
-            BloodDonarView bloodDonarView = new BloodDonarView();
-            return new JsonResult(bloodDonarView);
+            List<DonoteView> lstDonoteVie = obj.getserchResult(searchKey);
+            return new JsonResult(lstDonoteVie);
         }
-        public IActionResult postBloodDonor([FromBody]BloodDonarView bloodDonarView)
-        {
-            BloodDonorModel model = new BloodDonorModel();
-            response response = new response();
-            response.count=model.postData(bloodDonarView);
-            return new JsonResult(response);
-        }
+
+
     }
 }

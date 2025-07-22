@@ -14,28 +14,22 @@
         </div> -->
         <div class="section">
             <label class="label">👤 Name</label>
-            <input class="input" type="text" placeholder="Enter your name" v-model="donateView.sDonorName" />
-            <div v-if="sDonorNameError && !donateView.sDonorName " class="error">{{ sDonorNameError }}</div>
+            <input class="input" type="text" placeholder="Enter your name" v-model="donateView.sName" />
+            <div v-if="sDonorNameError && !donateView.sName " class="error">{{ sDonorNameError }}</div>
             <strong>Note:</strong> This is your name as a donor. 
         </div>
         <div class="section">
-            <label class="label"> DOB</label>
-            <input class="input" type="date" placeholder="Enter your date of birth" v-model="donateView.iDOB" />
-            <div v-if="dobError && !donateView.dob" class="error">{{ dobError }}</div>
-            <strong>Note:</strong> This is your date of birth. It helps us verify your eligibility to donate blood.
-        </div>
-
-        <!-- <div class="section">
-             <label class="label">📞 Contact Number</label>
-            <input class="input" type="text" placeholder="Enter your contact number" v-model="donateView.sContactNumber" />
-            <div v-if="sContactNumberError && !donateView.sContactNumber" class="error">{{ sContactNumberError }}</div>
-            <strong>Note:</strong> This is your contact number for potential donors to reach you
-        </div> -->
-        <div class="section">
-            <label class="label">📍 Location</label>
-            <input class="input" type="text" placeholder="Enter your location" v-model="donateView.iLocation" />
-            <div v-if="iLocationError && !donateView.iLocation" class="error">{{ iLocationError }}</div>
-            <strong>Disclaimer:</strong> Your location will be used to find donors near you.
+            <label class="label">How often would you like to donate?</label>
+            <div class="grid">
+                <div v-for="frequency in frequencies" :key="frequency.id"
+                    :class="['frequency-btn', selectedFrequency.id === frequency.id ? 'active' : '']"
+                    @click="selectFrequency(frequency)">
+                    {{ frequency.name }}
+                </div>
+                <div v-if="iFrequencyError && !donateView.iPayFrequncy" class="error">{{ iFrequencyError }}</div>
+            </div>
+            <strong>Note:</strong> This is how often you would like to donate blood.
+            <br />
         </div>
         <div class="section">
             <label class="label">🧬 Blood Group</label>
@@ -51,18 +45,28 @@
             <div class="more-options">More Options ></div>
         </div>
         <div class="section">
-            <label class="label">How often would you like to donate?</label>
-            <div class="grid">
-                <div v-for="frequency in frequencies" :key="frequency"
-                    :class="['frequency-btn', selectedFrequency === frequency ? 'active' : '']"
-                    @click="selectFrequency(frequency)">
-                    {{ frequency }}
-                </div>
-                <div v-if="iFrequencyError && !donateView.iFrequency" class="error">{{ iFrequencyError }}</div>
-            </div>
-            <strong>Note:</strong> This is how often you would like to donate blood.
-            <br />
+            <label class="label">📍 Location</label>
+            <input class="input" type="text" placeholder="Enter your location" v-model="donateView.iLocation" />
+            <div v-if="iLocationError && !donateView.iLocation" class="error">{{ iLocationError }}</div>
+            <strong>Disclaimer:</strong> Your location will be used to find donors near you.
         </div>
+        <div class="section">
+            <label class="label"> DOB</label>
+            <input class="input" type="date" placeholder="Enter your date of birth" v-model="donateView.iDOB" />
+            <div v-if="(dobError && !donateView.iDOB)" class="error">{{ dobError }}</div>
+            <div v-if="checkAgeError" class="error">{{ checkAgeError }}</div>
+            <strong>Note:</strong> This is your date of birth. It helps us verify your eligibility to donate blood.
+        </div>
+
+        <!-- <div class="section">
+             <label class="label">📞 Contact Number</label>
+            <input class="input" type="text" placeholder="Enter your contact number" v-model="donateView.sContactNumber" />
+            <div v-if="sContactNumberError && !donateView.sContactNumber" class="error">{{ sContactNumberError }}</div>
+            <strong>Note:</strong> This is your contact number for potential donors to reach you
+        </div> -->
+        
+        
+        
         <button class="submit" @click="PostDonate">Register</button>
 
 
@@ -108,11 +112,17 @@ import { date } from '@primeuix/themes/aura/datepicker';
 const router = useRouter();
 
 const donateView = ref({});
-
 const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 const selectedGroup = ref('');
 
-const frequencies = ['3Monthly', '4Monthly', 'Quarterly', 'Yearly'];
+
+
+const frequencies = [
+    { id: 1, name: 'Once a month' },
+    { id: 2, name: 'Every 3 months' },
+    { id: 3, name: 'Every 6 months' },
+    { id: 4, name: 'Once a year' }
+];
 const selectedFrequency = ref('');
 const sDonrTypeError = ref('');
 const sDonorNameError = ref('');
@@ -123,25 +133,59 @@ const iBloodGroupError = ref('');
 const iFrequencyError = ref('');
 
 onMounted(() => {
+    getLoad();
+});
+
+const getLoad=()=>{
     QuickActionsService.getDonateView().then((response) => {
         donateView.value = response.data;
     }).catch((error) => {
         console.error('Error fetching donate view:', error);
         alert('An error occurred while fetching donate view.');
     });
-});
-
+}
 const selectGroup = (group) => {
     selectedGroup.value = group;
     donateView.value.iBloodGroup = group;
 };
 const selectFrequency = (frequency) => {
     selectedFrequency.value = frequency;
-    donateView.value.iFrequency = frequency;
+    donateView.value.iPayFrequncy = frequency.id;
 };
 const datetoInt = (dob)  => {
-    let date = new Date(dob);
-    return date.getDate();
+    if(dob === null || dob === undefined) {
+        return 0;
+    }
+    let date = 0;
+    try{
+   date= ((dob.getfullYear()* Math.pow(2,16) ) + ((dob.getMonth() * Math.pow(2,8)+1)) + dob.getDate());
+    }catch (error) {
+          date= new Date(dob);
+        date = ((date.getFullYear() * Math.pow(2, 16)) + ((date.getMonth()+1) * Math.pow(2, 8)) + date.getDate());
+        return date;
+    }
+    return date;
+};
+
+//check age based on date of birth
+const checkAgeError = ref('');
+const  checkAge = () => {
+    if (!donateView.value.iDOB) return false;
+    const today = new Date();
+    const birthDate = new Date(donateView.value.iDOB);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    if( age < 18) {
+        checkAgeError.value = "You must be at least 18 years old to donate blood.";
+        return false;
+    } else {
+        checkAgeError.value = '';
+        return true;
+    }
+     // Minimum age to donate blood is 18
 };
 
 const validateForm = () => {
@@ -154,7 +198,7 @@ const validateForm = () => {
     iBloodGroupError.value = '';
     iFrequencyError.value = '';
 
-    if (!donateView.value.sDonorName) {
+    if (!donateView.value.sName) {
         sDonorNameError.value = "Please enter your name.";
         isValid = false;
     }
@@ -171,7 +215,7 @@ const validateForm = () => {
         iBloodGroupError.value = "Please select a blood group.";
         isValid = false;
     }
-    if (!donateView.value.iFrequency) {
+    if (!donateView.value.iPayFrequncy) {
         iFrequencyError.value = "Please select how often you would like to donate.";
         isValid = false;
     }
@@ -179,26 +223,23 @@ const validateForm = () => {
     return isValid;
 };
 const PostDonate = () => {
-    if (validateForm()) {
-        let dob= donateView.value.iDOB;
-        if (typeof dob === 'string') {
-            let fromattedDate = new Date(dob);
-             fromattedDate.toISOString().split('T')[0];
-            donateView.value.iDOB = fromattedDate;
-        }
+    if (validateForm() && checkAge()) {
         donateView.value.iDOB=datetoInt(donateView.value.iDOB);
+       
         QuickActionsService.postDonate(donateView.value).then((response) => {
             if (response.data.count>0) {
                 alert('Thank you for registering as a blood donor!');
-                router.push('/Home');
+               router.push('/Home');
             } else {
                 alert('Failed to register. Please try again later.');
-                router.push('/Home');
+                getLoad();
+               // router.push('/Home');
             }
         }).catch((error) => {
             console.error('Error during registration:', error);
             alert('An error occurred while processing your request. Please try again later.');
-            router.push('/Home');
+            getLoad();
+            //router.push('/Home');
         });
     } else {
         console.warn('Form validation failed.');
@@ -315,6 +356,7 @@ h1 {
 .submit:hover {
     background-color: #4338ca;
 }
+
 
 
 
