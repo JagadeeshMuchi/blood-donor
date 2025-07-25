@@ -1,21 +1,24 @@
 <template>
   <div class="login-container">
-    <h2 class="text-xl font-bold mb-4">Login</h2>
+    <h2 class="text-xl font-bold mb-4">Sign in to BloodDonor</h2>
     
-    <form @submit.prevent="login">
-      <div class="mb-3">
-        <label>Email</label>
-        <input v-model="email" type="email" placeholder="Enter email" class="input" required />
+    <form @submit.prevent="login" class="login-form">
+      <div class="form-group">
+        <label for="email" class="label-password">Username or email address</label>
+        <input type="email" id="email" v-model="email" placeholder="Enter email" required />
       </div>
-
-      <div class="mb-3">
-        <label>Password</label>
-        <input v-model="password" type="password" placeholder="Enter password" class="input" required />
+      <div class="form-group">
+        <div class="label-row">
+          <label for="password" class="label-password">Password</label>
+          <router-link to="/ForgetPassword" class="forget-link">Forget Password?</router-link>
+        </div>
+        <input type="password" id="password" v-model="password" placeholder="Enter password" required /> 
       </div>
-
+     
       <button type="submit" class="btn">Login</button>
     </form>
-
+    <p>Don't have an account?<router-link to="/SignUp" class="forget-link">Sign Up</router-link></p>
+    
     <div v-if="error" class="text-red-600 mt-2">{{ error }}</div>
   </div>
 </template>
@@ -86,13 +89,46 @@ const login=function(){
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   background: #fff;
 }
-
-.input {
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+ .form-group {
+   text-align: left;
+   margin-bottom: 1rem;
+ }
+ .label-row {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 6px;
+ }
+ .label-password {
+   font-size: 14px;
+   font-weight: 500;
+ }
+ .forget-link {
+   font-size: 13px;
+   color: #0969da;
+   text-decoration: none;
+   margin-left: 8px;
+ }
+ .forget-link:hover {
+   text-decoration: underline;
+ }
+input {
   width: 100%;
-  padding: 8px;
-  margin-top: 4px;
+  padding: 8px 10px;
+  border: 1px solid #d0d7de;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  font-size: 15px;
+  background: #f6f8fa;
+  transition: border-color 0.2s;
+}
+input:focus {
+  border-color: #0969da;
+  outline: none;
 }
 
 .btn {

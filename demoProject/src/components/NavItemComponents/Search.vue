@@ -41,6 +41,9 @@ import NavItem from '../NavItem.vue';
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import QuickActionsService from '../../Services/QuickActionsService';
+
+import apiServer from '../../Services/apiServer';
+
 const router = useRouter();
 
 const searchQuery = ref('');
@@ -65,7 +68,33 @@ const getLoad = () => {
             searchResultsValue.value = false;
         }
     }).catch((error) => {
-        console.error("Error fetching search results:", error);
+        alert('Mvc Core Is not running if You want to serach Data in Node Server');
+       apiServer.getDonorList(NameSearch.value).then((response) => {
+    if (response.data) {
+        searchResults.value = response.data;
+        searchError.value = '';
+        searchResultsValue.value = true;
+    } else {
+        searchError.value = 'No results found for the given search key.';
+        searchResultsValue.value = false;
+    }
+})
+.catch((error) => {
+    console.error('Error fetching donor list:', error);
+    searchError.value = 'Node server is not running or there was an error fetching the donor list.';
+    searchResultsValue.value = false;
+});
+
+  
+    //   apiServer.getDonorList().then((res) => {
+    //         searchResults.value = res.data;
+    //         searchError.value = '';
+    //         searchResultsValue.value = true;
+    //     }).catch((error) => {
+    //         console.error('Error fetching donor list:', error);
+    //         searchError.value = 'Node server is not running or there was an error fetching the donor list.';
+    //         searchResultsValue.value = false;
+    //     });
         searchError.value = 'An error occurred while fetching search results.';
         searchResultsValue.value = false;
     });

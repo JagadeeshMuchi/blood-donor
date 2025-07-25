@@ -9,6 +9,8 @@ import Donate  from "../components/QuickAction/Donate.vue";
 import FindDonar from "../components/QuickAction/FindDonar.vue";
 import OrderBlood from "../components/QuickAction/OrderBlood.vue";
 import Search from "../components/NavItemComponents/Search.vue";
+import signup from '../components/signup.vue';
+import ForgetPassword from "../components/ForgetPassword.vue";
 
 const routes=[
     { path:'/',component:login,name:'login' },
@@ -20,7 +22,9 @@ const routes=[
        {path:'/Donate',component:Donate ,name:'Donate'},
        {path:'/FindDonar',component:FindDonar ,name:'FindDonar'},
        {path:'/OrderBlood',component:OrderBlood ,name:'OrderBlood'},
-       {path:'/Search',component:Search ,name:'Search'}
+       {path:'/Search',component:Search ,name:'Search'},
+       {path:'/signup',component:signup ,name:'signup'},
+       {path:'/ForgetPassword',component:ForgetPassword ,name:'ForgetPassword'}
 ]
 const router=createRouter({
     history:createWebHistory(),
