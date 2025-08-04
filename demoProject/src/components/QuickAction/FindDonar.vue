@@ -80,6 +80,7 @@ import RadioButton from 'primevue/radiobutton'
 import Checkbox from 'primevue/checkbox'
 //import findDonorService from '../Services/findDonorService';
 import findDonorService from '../../Services/QuickActionsService';
+import NodeApiServer from '../../Services/NodeApiServer';
 
 const router = useRouter();
 
@@ -140,9 +141,9 @@ function PostFindDonor() {
         getLoad();
      }
     }).catch((error) => {
-        console.error("Error posting find donor request:", error);
-        alert("An error occurred while posting your request. Please try again.");
-        getLoad();
+        
+        
+        //getLoad();
        // router.push('/Home')
     });
   

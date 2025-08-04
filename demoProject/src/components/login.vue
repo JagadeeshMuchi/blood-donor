@@ -5,7 +5,7 @@
     <form @submit.prevent="login" class="login-form">
       <div class="form-group">
         <label for="email" class="label-password">Username or email address</label>
-        <input type="email" id="email" v-model="email" placeholder="Enter email" required />
+        <input type="text" id="email" v-model="email" placeholder="Enter Username or email" required />
       </div>
       <div class="form-group">
         <div class="label-row">
@@ -53,31 +53,25 @@ const login=function(){
           //   }
           // })
         }
+    }).catch((err)=>{
+      alert('Mvc Sever is Not Running could you want to  check in node server');
+      console.error(err);
+      apiServer.checkLogin(email.value,password.value).then((res)=>{
+        if(res.data.UserId){
+          localStorage.setItem('ProfileId',res.data.UserId);
+          router.push('/Home');
+        }
+        else{
+          error.value = 'Invalid username or password';
+        }
+      }).catch((err)=>{
+        console.error(err);
+        error.value = err;
+      });
     })
 }
 
-// async function getLogin() {
-//   let response = await apiClient.get('/getLogin');
 
-//     email.value=response.data.UserName
-// } 
-// const login = async () => {
-//   error.value = ''
-//   try {
-//     const response = await axios.post('http://bloodDonar:8080/api/login/getLogin', {
-//       email: email.value,
-//       password: password.value
-//     })
-
-//     // Handle token or success message
-//     const token = response.data.token
-//     localStorage.setItem('token', token)
-
-//     router.push('/dashboard') // Redirect to dashboard or home
-//   } catch (err) {
-//     error.value = err.response?.data?.message || 'Login failed'
-//   }
-// }
 </script>
 
 <style scoped>

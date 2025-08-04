@@ -14,7 +14,7 @@ import ForgetPassword from "../components/ForgetPassword.vue";
 
 const routes=[
     { path:'/',component:login,name:'login' },
-    { path:'/Profile',component:Profile ,name:'Profile' },
+    { path:'/Profile/:profileId?', component:Profile, name:'Profile' },
     { path:'/Home',component:Home ,name:'Home' },
      { path:'/ActionCard',component:ActionCard ,name:'ActionCard' },
       { path:'/DonationCard',component:DonationCard ,name:'DonationCard' },

@@ -3,9 +3,9 @@ import { Client } from 'pg';
 const client = new Client({
   host: 'localhost',
   port: 5433,
-  user: 'postgres',       // replace with your PostgreSQL username
-  password: 'centra', // replace with your PostgreSQL password
-  database: 'BloodDonor' // replace with your database name
+  user: 'postgres',      
+  password: 'centra', 
+  database: 'BloodDonor'
 });
 
   export default {
@@ -15,7 +15,7 @@ const client = new Client({
             return res;
         } catch (err) {
             console.error('Query error:', err.stack);
-            throw err; // Re-throw the error for handling in the calling function
+            throw err; 
         }
         },
     end: async () => {

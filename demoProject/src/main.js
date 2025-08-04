@@ -11,6 +11,7 @@ import RadioButton  from "primevue/radiobutton";
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Checkbox from 'primevue/checkbox'
+import { Toast } from 'primevue';
 
 
 export let  app=createApp(App)
@@ -23,6 +24,7 @@ app.component('InputText', InputText)
 app.component('RadioButton', RadioButton)
 app.component('Checkbox', Checkbox)
 app.component('Button', Button);
+app.component('Toast',Toast);
 app.use(router);
 
 app.mount('#app')

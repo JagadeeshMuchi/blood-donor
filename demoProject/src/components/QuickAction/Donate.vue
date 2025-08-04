@@ -1,6 +1,10 @@
 <template>
     
 <div class="container">
+    <div v-if="DonateMessage" :class="['signup-alert', DonateMessageType === 'success' ? 'signup-success' : 'signup-error']">
+      {{ DonateMessage }}
+      <span class="signup-alert-close" @click="DonateMessage = ''">×</span>
+    </div>
    
         <h1>Donate</h1>
         <p class="subheading">Donate blood directly to people in need.</p>
@@ -109,11 +113,15 @@ import { useRouter } from 'vue-router';
 
 import QuickActionsService from '../../Services/QuickActionsService';
 import { date } from '@primeuix/themes/aura/datepicker';
+import NodeApiServer from '../../Services/NodeApiServer';
+import DonationCard from '../DonationCard.vue';
 const router = useRouter();
 
 const donateView = ref({});
 const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 const selectedGroup = ref('');
+const DonateMessage=ref('')
+const DonateMessageType=ref('')
 
 
 
@@ -133,7 +141,7 @@ const iBloodGroupError = ref('');
 const iFrequencyError = ref('');
 
 onMounted(() => {
-    getLoad();
+    //getLoad();
 });
 
 const getLoad=()=>{
@@ -141,7 +149,7 @@ const getLoad=()=>{
         donateView.value = response.data;
     }).catch((error) => {
         console.error('Error fetching donate view:', error);
-        alert('An error occurred while fetching donate view.');
+        //alert('An error occurred while fetching donate view.');
     });
 }
 const selectGroup = (group) => {
@@ -169,6 +177,7 @@ const datetoInt = (dob)  => {
 
 //check age based on date of birth
 const checkAgeError = ref('');
+const iEmpId= localStorage.getItem('ProfileId');
 const  checkAge = () => {
     if (!donateView.value.iDOB) return false;
     const today = new Date();
@@ -222,9 +231,19 @@ const validateForm = () => {
     
     return isValid;
 };
+const clearData=()=>{
+    donateView.value.sName='';
+    donateView.value.iLocation='';
+    donateView.value.iBloodGroup='';
+    donateView.value.iDOB='';
+    donateView.value.iPayFrequncy='';
+    donateView.value.UserId=0;
+    selectedGroup.value='';
+    selectedFrequency.value=''
+}
 const PostDonate = () => {
     if (validateForm() && checkAge()) {
-        donateView.value.iDOB=datetoInt(donateView.value.iDOB);
+        //donateView.value.iDOB=datetoInt(donateView.value.iDOB);
        
         QuickActionsService.postDonate(donateView.value).then((response) => {
             if (response.data.count>0) {
@@ -235,10 +254,23 @@ const PostDonate = () => {
                 getLoad();
                // router.push('/Home');
             }
-        }).catch((error) => {
-            console.error('Error during registration:', error);
-            alert('An error occurred while processing your request. Please try again later.');
-            getLoad();
+        }).catch((error) => { 
+           alert("Posted data through node.js server Due to MVC server is Busy ");
+           donateView.value.UserId=iEmpId;
+        NodeApiServer.postBloodDonor(donateView.value).then((response)=>{
+          if(response.data!=undefined && response.data>0){
+            DonateMessage.value="Thank you for your selfless donation! Your generosity is truly inspiring and you have made a real difference in someone's life."
+            DonateMessageType.value="success"
+           clearData();
+          }else{
+            DonateMessage.value="Thank you for your willingness to help! Please wait a moment while we connect you with someone in need. If there is a delay, rest assured your generosity will make a difference soon.";
+            DonateMessageType.value='error'
+              clearData();
+          }
+        //   setTimeout(() => {
+        //     DonateMessage.value = '';
+        //   }, 3000);
+        })
             //router.push('/Home');
         });
     } else {
@@ -356,6 +388,54 @@ h1 {
 .submit:hover {
     background-color: #4338ca;
 }
+ .signup-success {
+   color: #2ea44f;
+   font-size: 15px;
+   margin-top: 16px;
+   font-weight: 600;
+ }
+ .signup-error {
+   color: #d73a49;
+   font-size: 15px;
+   margin-top: 16px;
+   font-weight: 600;
+ }
+ .signup-alert {
+   position: fixed;
+   top: 0;
+   left: 3;
+   width: 30%;
+   padding: 16px 9px;
+   text-align: left;
+   font-size: 16px;
+   font-weight: 600;
+   z-index: 200;
+   border-radius: 0 0 8px 8px;
+   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin: 0rem 0rem 0rem 35rem;
+ }
+ .signup-success.signup-alert {
+   background: #e6f4ea;
+   color: #22863a;
+   border-bottom: 2px solid #2ea44f;
+ }
+ .signup-error.signup-alert {
+   background: #fbeaea;
+   color: #d73a49;
+   border-bottom: 2px solid #d73a49;
+ }
+ .signup-alert-close {
+   margin-left: 16px;
+   cursor: pointer;
+   font-size: 22px;
+   color: #888;
+   font-weight: bold;
+   background: none;
+   border: none;
+ }
 
 
 

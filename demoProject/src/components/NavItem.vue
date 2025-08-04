@@ -10,7 +10,7 @@
             <router-link  class="nav-item" active-class="active" to="/notifications">
                 <div>🔔<br />Notifications</div>
             </router-link>
-            <router-link to="/Profile" class="nav-item" active-class="active">
+            <router-link :to="`/Profile/${id}`" class="nav-item" active-class="active">
                 <div :class="router.name=='Profile'?'nav-item.active':'nav-item'">👤<br />Account</div>
             </router-link>
         </nav>
@@ -20,6 +20,7 @@
 import { ref } from 'vue';  
 import { useRouter, RouterLink } from 'vue-router';
 const router = useRouter();
+const id= localStorage.getItem('ProfileId');
 </script>
 <style scoped>
 .container1 {

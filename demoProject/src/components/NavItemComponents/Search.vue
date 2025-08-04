@@ -19,7 +19,7 @@
                     <td>{{ donor.iBloodGroup }}</td>
                     <td>{{ donor.iLocation }}</td>
                     <td>
-                        <a href="#" @click.prevent="router.push(`/donor/${donor.iDonateId}`)" v-tooltip="'View Donor Details'">👁️View</a>
+                        <a href="#" @click.prevent="router.push(`/profile/${donor.iDonateId}`)" v-tooltip="'View Donor Details'">👁️View</a>
                         <button class="action-card" @click="RequestSent()" v-tooltip="'Request Blood'">Request Blood</button>
                     </td>
 
@@ -84,17 +84,6 @@ const getLoad = () => {
     searchError.value = 'Node server is not running or there was an error fetching the donor list.';
     searchResultsValue.value = false;
 });
-
-  
-    //   apiServer.getDonorList().then((res) => {
-    //         searchResults.value = res.data;
-    //         searchError.value = '';
-    //         searchResultsValue.value = true;
-    //     }).catch((error) => {
-    //         console.error('Error fetching donor list:', error);
-    //         searchError.value = 'Node server is not running or there was an error fetching the donor list.';
-    //         searchResultsValue.value = false;
-    //     });
         searchError.value = 'An error occurred while fetching search results.';
         searchResultsValue.value = false;
     });

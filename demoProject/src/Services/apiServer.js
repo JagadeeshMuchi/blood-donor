@@ -12,4 +12,15 @@ async getUserProfile(iempId) {
 async getDonorList(sSearchName) {
     return await nodeClient.get('bloodDonor?sDonorName=' + sSearchName);
 },
+async checkLogin(email, password) {
+    return await nodeClient.get('checkLogin?username=' + email + '&password=' + password)
+},
+async getProfile(id){
+    return await nodeClient.get('getPorfile?id='+id)
+},
+async createAccount(logiview){
+    return await nodeClient.post('createAccount', logiview, {
+        headers: { 'Content-Type': 'application/json' }
+    });
+},
 }
